@@ -1,8 +1,3 @@
-# Do not commit sensitive data
-ansible_secrets.sh
-group_vars/secrets
-secrets
-
 # OS X related
 .DS_Store
 .AppleDouble
