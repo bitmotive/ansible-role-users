@@ -6,29 +6,38 @@
   with_items: 
     - sshusers
 
-- name: new users | add new user
-  user: name={{ item.username }} state=present password={{ item.password }} groups={{ item.groups }}
+- name: Add new users
+  user: >
+    name={{ item.username }}
+    state=present
+    password={{ item.password }}
+    groups={{ item.groups }}
   with_items: users
   tags: 
-    - user-management
+    - users-create
 
-- name: new users | create ssh directory for users
+- name: Create ssh directory for users
   file: path=/home/{{ item.username }}/.ssh state=directory owner={{ item.username }} group={{ item.username }} mode=0755
   with_items: users
   tags:
-    - user-management
+    - users-ssh
 
-- name: new users | add ssh pubkey for users
-  copy: content='{{ item.pubkey }}' dest=/home/{{ item.username }}/.ssh/authorized_keys owner={{ item.username }} group={{ item.username }} mode=0644
+- name: Add ssh pubkey for users
+  copy: >
+    content='{{ item.pubkey }}'
+    dest=/home/{{ item.username }}/.ssh/authorized_keys
+    owner={{ item.username }}
+    group={{ item.username }}
+    mode=0644
   with_items: users
   tags: 
-    - user-management
+    - users-ssh
 
-- name: new users | alias email entries for users
+- name: Alias email entries for users
   lineinfile: >
       dest=/etc/aliases 
       line="{{ item.username }}: {{ item.email }}"
       state=present
   with_items: users
   tags:
-    - user-management
+    - users-aliases
