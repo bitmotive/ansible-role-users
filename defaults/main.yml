@@ -1,0 +1,15 @@
+---
+# defaults file for users role
+
+# Set this variable to true or false depending on if you want to customize /etc/skel
+role_users_customize_skel: false
+
+# Set this variable to true or false depending on if you want to set e-mail aliases for users
+role_users_set_aliases: false
+
+# Override this variable with a list of hash items
+# to provide all groups for this host.
+role_users_groups: []
+
+# Override this variable with a list of hash items to represent users.
+role_users_list: []

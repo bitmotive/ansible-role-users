@@ -1,43 +1,46 @@
 ---
 # Add all users specified for this build
 
-- name: system groups | add baseline system groups
-  group: name={{ item }} state=present system=yes 
-  with_items: 
-    - sshusers
+# Copy all contents from local files/etc/skel to remote /etc/skel
+- name: Configure /skel files to establish baseline for all home directories
+  copy: >
+    src=etc/skel/
+    dest=/etc/skel
+    owner=root
+    group=root
+    mode=0644
+  when: role_users_customize_skel 
+  tags: 
+    - role-users-skel
 
-- name: Add new users
+# Makes this role self-contained and executable without dependencies.
+- name: Add baseline system groups required by users module
+  group: >
+    name={{ item.name }} 
+    system={{ item.system }}
+    state=present
+  with_items: role_users_groups
+  tags:
+    - role-users-group-dependencies
+
+- name: Configure all user accounts for host
   user: >
     name={{ item.username }}
-    state=present
     password={{ item.password }}
     groups={{ item.groups }}
-  with_items: users
+    system={{ item.system }}
+    createhome={{ item.createhome }}
+    append=yes
+  with_items: role_users_list
   tags: 
-    - users-create
-
-- name: Create ssh directory for users
-  file: path=/home/{{ item.username }}/.ssh state=directory owner={{ item.username }} group={{ item.username }} mode=0755
-  with_items: users
-  tags:
-    - users-ssh
-
-- name: Add ssh pubkey for users
-  copy: >
-    content='{{ item.pubkey }}'
-    dest=/home/{{ item.username }}/.ssh/authorized_keys
-    owner={{ item.username }}
-    group={{ item.username }}
-    mode=0644
-  with_items: users
-  tags: 
-    - users-ssh
+    - role-users-create-users
 
 - name: Alias email entries for users
   lineinfile: >
       dest=/etc/aliases 
       line="{{ item.username }}: {{ item.email }}"
       state=present
-  with_items: users
+  with_items: role_users_list
+  when: role_users_set_aliases
   tags:
-    - users-aliases
+    - role-users-email-aliases
