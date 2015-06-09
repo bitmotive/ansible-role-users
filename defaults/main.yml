@@ -1,15 +1,46 @@
 ---
 # defaults file for users role
 
-# Set this variable to true or false depending on if you want to customize /etc/skel
+# Set to true to customize /etc/skel
 role_users_customize_skel: false
 
-# Set this variable to true or false depending on if you want to set e-mail aliases for users
+# Set to true to send user system messages to e-mail
 role_users_set_aliases: false
 
-# Override this variable with a list of hash items
-# to provide all groups for this host.
-role_users_groups: []
+# Override this variable to create groups on this host
+role_users_groups = []
+# Example:
+# role_users_groups:
+# - {
+#   name: 'webworkers',
+#   system: 'no'
+# }
+# - {
+#   name: 'sshers',
+#   system: 'no'
+# }
+# - {
+#   name: 'devops',
+#   system: 'no'
+# }
 
 # Override this variable with a list of hash items to represent users.
-role_users_list: []
+role_users_list = []
+# Example:
+# role_users_list:
+# - {
+#     username: 'john',
+#     groups: 'webworkers',
+#     append: 'yes',
+#     system: 'no',
+#     createhome: 'yes',
+#     password: '$6$rounds=100000$Pzs3rdiBFlOgmTe2$bCqiOmTH7tfE3AT8jgORjAXS0jrXFbHS2zVeKMLjIQPsH2g4.vXDaBeOZFqJcNjX7LaQ1plL3ulZVg7W8BQrI.'
+# }
+# - {
+#     username: 'jane',
+#     groups: 'webworkers',
+#     append: 'yes',
+#     system: 'no',
+#     createhome: 'yes',
+#     password: '$6$rounds=100000$Pzs3rdiBFlOgmTe2$bCqiOmTH7tfE3AT8jgORjAXS0jrXFbHS2zVeKMLjIQPsH2g4.vXDaBeOZFqJcNjX7LaQ1plL3ulZVg7W8BQrI.'
+# }

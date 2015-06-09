@@ -16,7 +16,7 @@
 # Makes this role self-contained and executable without dependencies.
 - name: Add baseline system groups required by users module
   group: >
-    name={{ item.name }} 
+    name={{ item.name }}
     system={{ item.system }}
     state=present
   with_items: role_users_groups
